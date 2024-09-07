@@ -18,7 +18,7 @@ public interface PropostaMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "aprovada", ignore = true)
-    @Mapping(target = "integrada", ignore = true)
+    @Mapping(target = "integrada", constant = "true")
     @Mapping(target = "observacao", ignore = true)
     @Mapping(target = "usuario.nome", source = "nome")
     @Mapping(target = "usuario.sobrenome", source = "sobrenome")

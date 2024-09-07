@@ -5,6 +5,7 @@ import com.antoniosousa.proposta_app.dto.PropostaResponseDto;
 import com.antoniosousa.proposta_app.entity.Proposta;
 import com.antoniosousa.proposta_app.mapper.PropostaMapper;
 import com.antoniosousa.proposta_app.repositories.PropostaRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +14,17 @@ import java.util.List;
 @Service
 public class PropostaService {
 
-    private final PropostaRepository propostaRepository;
+    private PropostaRepository propostaRepository;
 
-    public PropostaService(PropostaRepository propostaRepository) {
+    private NotificacaoRabbitService notificacaoRabbitService;
+
+    private String exchange;
+
+    public PropostaService(@Value("${rabbitmq.propostapendente.exchange}}") String exchange,
+                           NotificacaoRabbitService notificacaoRabbitService,
+                           PropostaRepository propostaRepository) {
+        this.exchange = exchange;
+        this.notificacaoRabbitService = notificacaoRabbitService;
         this.propostaRepository = propostaRepository;
     }
 
@@ -24,7 +33,19 @@ public class PropostaService {
         Proposta proposta = PropostaMapper.INSTANCE.convertDtoToProposta(propostaRequestDto);
         propostaRepository.save(proposta);
 
+        notificarRabbitMQ(proposta);
+
         return PropostaMapper.INSTANCE.convertEntitytoDto(proposta);
+    }
+
+    private void notificarRabbitMQ(Proposta proposta) {
+        try {
+            notificacaoRabbitService.notify(proposta, exchange);
+        } catch (RuntimeException e) {
+            proposta.setIntegrada(false);
+            propostaRepository.save(proposta);
+        }
+
     }
 
     @Transactional(readOnly = true)
