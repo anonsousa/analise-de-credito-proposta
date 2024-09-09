@@ -32,6 +32,7 @@ public class PropostaSemIntegracao {
 
     @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
     public void searchPropostasSemIntegração(){
+        logger.info("Executando busca de propostas que nao foram integradas");
         propostaRepository.findAllByIntegradaIsFalse().forEach(proposta -> {
             try {
 
