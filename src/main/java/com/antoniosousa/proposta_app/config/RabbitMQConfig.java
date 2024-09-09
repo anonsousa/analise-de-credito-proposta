@@ -24,7 +24,9 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue createQueuePropostaPendenteMsAnaliseCredito() {
-        return QueueBuilder.durable("proposta-pendente.ms-analise-credito").build();
+        return QueueBuilder.durable("proposta-pendente.ms-analise-credito")
+                .deadLetterExchange("proposta-pendente-dlx.ex")
+                .build();
     }
 
     @Bean
@@ -40,6 +42,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue createQueuePropostaConcluidaMsNotificacao() {
         return QueueBuilder.durable("proposta-concluida.ms-notificacao").build();
+    }
+
+    @Bean
+    public Queue createQueuePropostaPendenteDlq() {
+        return QueueBuilder.durable("proposta-pendente.dlq").build();
     }
 
     @Bean
@@ -60,6 +67,16 @@ public class RabbitMQConfig {
     @Bean
     public FanoutExchange createFanoutExchangePropostaConcluida() {
         return ExchangeBuilder.fanoutExchange(exchangePropostaConcluida).build();
+    }
+
+    @Bean
+    public FanoutExchange createFanoutDeadLetterExchange() {
+        return ExchangeBuilder.fanoutExchange("proposta-pendente-dlx.ex").build();
+    }
+
+    @Bean
+    public Binding createDlqBinding() {
+        return BindingBuilder.bind(createQueuePropostaPendenteDlq()).to(createFanoutDeadLetterExchange());
     }
 
     @Bean
