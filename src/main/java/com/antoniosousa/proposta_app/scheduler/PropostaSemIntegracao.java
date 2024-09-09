@@ -20,7 +20,7 @@ public class PropostaSemIntegracao {
 
     private final String exchange;
 
-    private final Logger logger = LoggerFactory.getLogger(PropostaSemIntegracao.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropostaSemIntegracao.class);
 
     public PropostaSemIntegracao(PropostaRepository propostaRepository,
                                  NotificacaoRabbitService notificacaoRabbitService,

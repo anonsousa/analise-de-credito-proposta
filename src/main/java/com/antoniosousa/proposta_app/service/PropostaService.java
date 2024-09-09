@@ -14,13 +14,13 @@ import java.util.List;
 @Service
 public class PropostaService {
 
-    private PropostaRepository propostaRepository;
+    private final PropostaRepository propostaRepository;
 
-    private NotificacaoRabbitService notificacaoRabbitService;
+    private final NotificacaoRabbitService notificacaoRabbitService;
 
-    private String exchange;
+    private final String exchange;
 
-    public PropostaService(@Value("${rabbitmq.propostapendente.exchange}}") String exchange,
+    public PropostaService(@Value("${rabbitmq.propostapendente.exchange}") String exchange,
                            NotificacaoRabbitService notificacaoRabbitService,
                            PropostaRepository propostaRepository) {
         this.exchange = exchange;

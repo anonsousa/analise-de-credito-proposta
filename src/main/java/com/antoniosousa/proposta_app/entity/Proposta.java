@@ -1,6 +1,7 @@
 package com.antoniosousa.proposta_app.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,5 +32,6 @@ public class Proposta {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_usuario")
+    @JsonManagedReference
     private Usuario usuario;
 }
