@@ -104,6 +104,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>proposta-app</finalName>
 	</build>
 
 </project>
